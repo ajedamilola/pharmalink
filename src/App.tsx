@@ -18,12 +18,20 @@ import PharmacyDocuments from "./pages/pharmacy/PharmacyDocuments";
 import PharmacyPOS from "./pages/pharmacy/PharmacyPOS";
 import PharmacyProductDetail from "./pages/pharmacy/PharmacyProductDetail";
 import PharmacyOrders from "./pages/pharmacy/PharmacyOrders";
-import Notifications from "./pages/shared/Notifications";
-import NotFound from "./pages/NotFound";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import VendorProducts from "./pages/vendor/VendorProducts";
 import VendorOrders from "./pages/vendor/VendorOrders";
 import VendorVerification from "./pages/vendor/VendorVerification";
+import Notifications from "./pages/shared/Notifications";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminPharmacies from "./pages/admin/AdminPharmacies";
+import AdminVendors from "./pages/admin/AdminVendors";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminBuyback from "./pages/admin/AdminBuyback";
+import AdminDisputes from "./pages/admin/AdminDisputes";
+import AdminAudit from "./pages/admin/AdminAudit";
+import AdminSettings from "./pages/admin/AdminSettings";
+import NotFound from "./pages/NotFound";
 import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
@@ -72,6 +80,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<Navigate to={homeRoute} replace />} />
 
+        {/* Redirect wrong portal routes to home */}
         {appUser.role !== 'pharmacy' && <Route path="/pharmacy/*" element={<Navigate to={homeRoute} replace />} />}
         {appUser.role !== 'vendor' && <Route path="/vendor/*" element={<Navigate to={homeRoute} replace />} />}
         {appUser.role !== 'admin' && <Route path="/admin/*" element={<Navigate to={homeRoute} replace />} />}
@@ -95,6 +104,15 @@ const AppRoutes = () => {
         <Route path="/vendor/verification" element={<VendorVerification />} />
         <Route path="/vendor/notifications" element={<Notifications />} />
 
+        {/* Admin routes */}
+        <Route path="/admin" element={<AdminOverview />} />
+        <Route path="/admin/pharmacies" element={<AdminPharmacies />} />
+        <Route path="/admin/vendors" element={<AdminVendors />} />
+        <Route path="/admin/orders" element={<AdminOrders />} />
+        <Route path="/admin/buyback" element={<AdminBuyback />} />
+        <Route path="/admin/disputes" element={<AdminDisputes />} />
+        <Route path="/admin/audit" element={<AdminAudit />} />
+        <Route path="/admin/settings" element={<AdminSettings />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

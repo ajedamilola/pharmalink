@@ -72,7 +72,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex h-16 items-center gap-2 px-4 border-b border-sidebar-border">
-          <Pill className="h-6 w-6 text-sidebar-primary" />
+          <img src="/logo-white.png" alt="PharmaLink" className="h-6 w-6 text-sidebar-primary" />
           <span className="text-lg font-bold">PharmaLink</span>
           <Button variant="ghost" size="icon" className="ml-auto lg:hidden text-sidebar-foreground" onClick={() => setSidebarOpen(false)}>
             <X className="h-4 w-4" />
