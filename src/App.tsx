@@ -20,6 +20,10 @@ import PharmacyProductDetail from "./pages/pharmacy/PharmacyProductDetail";
 import PharmacyOrders from "./pages/pharmacy/PharmacyOrders";
 import Notifications from "./pages/shared/Notifications";
 import NotFound from "./pages/NotFound";
+import VendorDashboard from "./pages/vendor/VendorDashboard";
+import VendorProducts from "./pages/vendor/VendorProducts";
+import VendorOrders from "./pages/vendor/VendorOrders";
+import VendorVerification from "./pages/vendor/VendorVerification";
 import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
@@ -68,7 +72,6 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<Navigate to={homeRoute} replace />} />
 
-        {/* Redirect wrong portal routes to home */}
         {appUser.role !== 'pharmacy' && <Route path="/pharmacy/*" element={<Navigate to={homeRoute} replace />} />}
         {appUser.role !== 'vendor' && <Route path="/vendor/*" element={<Navigate to={homeRoute} replace />} />}
         {appUser.role !== 'admin' && <Route path="/admin/*" element={<Navigate to={homeRoute} replace />} />}
@@ -84,6 +87,14 @@ const AppRoutes = () => {
         <Route path="/pharmacy/orders" element={<PharmacyOrders />} />
         <Route path="/pharmacy/notifications" element={<Notifications />} />
         <Route path="/pharmacy/documents" element={<PharmacyDocuments />} />
+
+        {/* Vendor routes */}
+        <Route path="/vendor" element={<VendorDashboard />} />
+        <Route path="/vendor/products" element={<VendorProducts />} />
+        <Route path="/vendor/orders" element={<VendorOrders />} />
+        <Route path="/vendor/verification" element={<VendorVerification />} />
+        <Route path="/vendor/notifications" element={<Notifications />} />
+
 
         <Route path="*" element={<NotFound />} />
       </Routes>

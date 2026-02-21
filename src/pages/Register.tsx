@@ -30,7 +30,7 @@ const Register = () => {
       // Sign up with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: form.email,
-        password: form.password,
+        password: form.password
       });
       if (authError) throw authError;
       if (!authData.user) throw new Error('Registration failed');
