@@ -8,6 +8,7 @@ import { useEffect, useRef } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import OTPVerification from "./pages/OTPVerification";
+import LandingPage from "./pages/landing/root_landing";
 import DashboardLayout from "./components/DashboardLayout";
 import PharmacyDashboard from "./pages/pharmacy/PharmacyDashboard";
 import PharmacyInventory from "./pages/pharmacy/PharmacyInventory";
@@ -59,12 +60,14 @@ const AppRoutes = () => {
   if (!session || !appUser) {
     return (
       <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="*" element={<Login />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );
   }
-
+  
   // Admin requires OTP
   if (appUser.role === 'admin' && !otpVerified) {
     return <OTPVerification />;
