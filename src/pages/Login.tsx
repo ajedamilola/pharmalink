@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Pill, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-
+import Logo from '/logo-green.png';
 const Login = () => {
   const { signIn } = useAuth();
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ const Login = () => {
       <div className="w-full max-w-md space-y-6">
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 text-primary">
-            <Pill className="h-10 w-10" />
+            <img src={Logo} alt="logo" width={32} height={32} className='' />
             <h1 className="text-3xl font-bold">PharmaLink</h1>
           </div>
           <p className="text-muted-foreground text-sm">Pharmacy Supply Chain Management</p>
