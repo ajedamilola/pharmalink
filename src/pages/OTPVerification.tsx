@@ -4,8 +4,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Pill, Loader2, ShieldCheck } from 'lucide-react';
+import { Loader2, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
+import Logo from '/logo-green.png';
 
 const OTPVerification = () => {
   const { appUser, setOtpVerified, signOut } = useAuth();
@@ -55,7 +56,7 @@ const OTPVerification = () => {
       <div className="w-full max-w-md space-y-6">
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 text-primary">
-            <Pill className="h-10 w-10" />
+            <img src={Logo} alt="logo" width={40} height={40} className='' />
             <h1 className="text-3xl font-bold">PharmaLink</h1>
           </div>
           <p className="text-muted-foreground text-sm">Admin Two-Step Verification</p>

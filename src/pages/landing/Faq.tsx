@@ -39,17 +39,17 @@ export default function Faq() {
   };
 
   return (
-    <section id="faq" className="bg-[#050505] text-white py-24 px-4 md:px-8 font-[arimo]">
+    <section id="faq" className="bg-white text-green-950 py-24 px-4 md:px-8 font-[arimo]">
       <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
         
         {/* Left Side - Header */}
         <div className="col-span-1 lg:col-span-4 flex flex-col gap-6">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight text-white/90">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight text-green-950/90">
             Any questions?<br />
             We got you.
           </h2>
           
-          <p className="text-gray-400 text-sm md:text-base leading-relaxed max-w-sm">
+          <p className="text-green-950/70 text-sm md:text-base leading-relaxed max-w-sm">
             Learn more about how PharmaLink is revolutionizing pharmacy supply chains with automated restocking, buy-backs, and direct vendor access.
           </p>
 
@@ -65,16 +65,16 @@ export default function Faq() {
             {faqs.map((faq, index) => (
               <div 
                 key={index} 
-                className={`border-b border-white/10 overflow-hidden ${index === 0 ? 'border-t' : ''} ${openIndex === index ? 'bg-white/5' : ''}`}
+                className={`border-b border-green-950/10 overflow-hidden ${index === 0 ? 'border-t' : ''} ${openIndex === index ? 'bg-green-950/5' : ''}`}
               >
                 <div 
                   className="py-8 md:py-10 flex justify-between items-center cursor-pointer group px-4 md:px-6"
                   onClick={() => toggleFaq(index)}
                 >
-                  <h3 className={`text-lg md:text-4xl pr-8 select-none ${openIndex === index ? 'text-[#22c55e]' : 'text-white/90 group-hover:text-[#22c55e]'}`}>
+                  <h3 className={`text-lg md:text-4xl pr-8 select-none ${openIndex === index ? 'text-[#22c55e]' : 'text-green-950/90 group-hover:text-[#22c55e]'}`}>
                     {faq.question}
                   </h3>
-                  <div className={`shrink-0 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center ${openIndex === index ? 'bg-[#22c55e] text-black border-[#22c55e]' : 'text-gray-500 group-hover:border-[#22c55e] group-hover:text-[#22c55e]'}`}>
+                  <div className={`shrink-0 w-10 h-10 rounded-full border border-green-950/10 flex items-center justify-center ${openIndex === index ? 'bg-[#22c55e] text-green-950 border-[#22c55e]' : 'text-green-950/50 group-hover:border-[#22c55e] group-hover:text-[#22c55e]'}`}>
                     {openIndex === index ? (
                       <Minus size={20} />
                     ) : (
@@ -89,7 +89,7 @@ export default function Faq() {
                   }`}
                 >
                   <div className="px-4 md:px-6">
-                    <p className="text-gray-400 md:text-xl text-sm leading-relaxed pr-8 max-w-2xl">
+                    <p className="text-green-950/70 md:text-xl text-sm leading-relaxed pr-8 max-w-2xl">
                       {faq.answer}
                     </p>
                   </div>
