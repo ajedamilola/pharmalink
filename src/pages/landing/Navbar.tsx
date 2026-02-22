@@ -65,15 +65,15 @@ export default function Navbar() {
           <img
             src='/logo-green.png'
             alt='PharmaLink'
-            className='md:size-14 size-10  transition-transform group-hover:scale-105'
+            className='md:size-12 size-10  transition-transform group-hover:scale-105'
           />
-          <span className='text-3xl md:text-4xl font-bold tracking-tight text-green-950 ml-2'>
+          <span className='text-3xl md:text-3xl font-bold tracking-tight text-green-950 ml-2'>
             PHARMALINK
           </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className='hidden md:flex items-center gap-8 text-xl md:text-2xl text-green-950/80 border border-green-950/10 rounded-full px-8 py-3 bg-green-950/5 backdrop-blur-md'>
+        <div className='hidden md:flex items-center gap-8 text-xl md:text-xl text-green-950/80 border border-green-950/10 rounded-full px-8 py-3 bg-green-950/5 backdrop-blur-md'>
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.label}
