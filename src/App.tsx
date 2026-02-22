@@ -19,10 +19,12 @@ import PharmacyDocuments from "./pages/pharmacy/PharmacyDocuments";
 import PharmacyPOS from "./pages/pharmacy/PharmacyPOS";
 import PharmacyProductDetail from "./pages/pharmacy/PharmacyProductDetail";
 import PharmacyOrders from "./pages/pharmacy/PharmacyOrders";
+import PharmacyProfile from "./pages/pharmacy/PharmacyProfile";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import VendorProducts from "./pages/vendor/VendorProducts";
 import VendorOrders from "./pages/vendor/VendorOrders";
 import VendorVerification from "./pages/vendor/VendorVerification";
+import VendorProfile from "./pages/vendor/VendorProfile";
 import Notifications from "./pages/shared/Notifications";
 import AdminOverview from "./pages/admin/AdminOverview";
 import AdminPharmacies from "./pages/admin/AdminPharmacies";
@@ -126,6 +128,7 @@ const AppRoutes = () => {
         <Route path='/pharmacy/orders' element={<PharmacyOrders />} />
         <Route path='/pharmacy/notifications' element={<Notifications />} />
         <Route path='/pharmacy/documents' element={<PharmacyDocuments />} />
+        <Route path='/pharmacy/profile' element={<PharmacyProfile />} />
 
         {/* Vendor routes */}
         <Route path='/vendor' element={<VendorDashboard />} />
@@ -133,6 +136,7 @@ const AppRoutes = () => {
         <Route path='/vendor/orders' element={<VendorOrders />} />
         <Route path='/vendor/verification' element={<VendorVerification />} />
         <Route path='/vendor/notifications' element={<Notifications />} />
+        <Route path='/vendor/profile' element={<VendorProfile />} />
 
         {/* Admin routes */}
         <Route path='/admin' element={<AdminOverview />} />
