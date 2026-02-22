@@ -67,7 +67,7 @@ export default function Navbar() {
             alt='PharmaLink'
             className='md:size-12 size-10  transition-transform group-hover:scale-105'
           />
-          <span className='text-3xl md:text-3xl font-bold tracking-tight text-green-950 ml-2'>
+          <span className='text-3xl md:text-3xl font-semibold tracking-tight text-green-950 ml-2'>
             PHARMALINK
           </span>
         </Link>

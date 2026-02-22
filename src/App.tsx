@@ -52,7 +52,11 @@ const AppRoutes = () => {
   if (loading) {
     return (
       <div className='flex min-h-screen items-center justify-center bg-muted/30'>
-        <Loader2 className='h-8 w-8 animate-spin text-primary' />
+        <img
+          src='/logo-green.png'
+          alt='PharmaLink'
+          className='md:size-12 size-10 animate-spin transition-transform group-hover:scale-105'
+        />
       </div>
     );
   }

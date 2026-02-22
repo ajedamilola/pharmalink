@@ -18,7 +18,7 @@ export default function Footer() {
                     </p>
                 </div>
                 
-                <a href="mailto:hello@pharmalink.ng" className="text-3xl md:text-6xl font-bold tracking-tight hover:text-[#22c55e] transition-colors inline-block border-b border-green-950/20 pb-2 break-all md:break-normal text-green-950">
+                <a href="mailto:hello@pharmalink.ng" className="text-3xl font-normal md:text-6xl tracking-tight hover:text-[#22c55e] transition-colors inline-block border-b border-green-950/20 pb-2 break-all md:break-normal text-green-950">
                     hello@pharmalink.ng
                 </a>
             </div>
@@ -55,11 +55,11 @@ export default function Footer() {
         </div>
 
         {/* Massive Brand Text */}
-        <div className="w-full overflow-hidden border-t border-green-950/10 pt-4">
-             <h1 className="text-[17vw] leading-[0.8] font-normal tracking-tighter text-center select-none uppercase text-green-950/5">
+        {/* <div className="w-full overflow-hidden border-t border-green-950/10 pt-4">
+             <h1 className="text-[10vw] leading-[0.8] font-normal tracking-tighter text-center select-none uppercase text-green-950/5">
                  PharmaLink
              </h1>
-        </div>
+        </div> */}
 
       </div>
 
