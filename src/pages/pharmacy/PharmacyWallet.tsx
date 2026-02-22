@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +13,9 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Loader2, Wallet as WalletIcon, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import axios from 'axios';
+import { usePaystackPayment } from 'react-paystack';
+import CurrencyInput from 'react-currency-input-field';
 
 const PharmacyWallet = () => {
   const { appUser } = useAuth();
@@ -39,10 +43,21 @@ const PharmacyWallet = () => {
     fetch();
   }, [appUser]);
 
-  const handleTopUp = async () => {
+  const config = useMemo(() => ({
+    reference: (new Date()).getTime().toString(),
+    email: "user@example.com",
+    amount: parseFloat(topUpAmount.replace(/,/g, '')) * 100 || 0,
+    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+  }), [topUpAmount]);
+
+
+  const initializePayment = usePaystackPayment(config);
+
+  // you can call this function anything
+  const onSuccess = async (reference) => {
     if (!pharmacy || !topUpAmount) return;
     setTopUpLoading(true);
-    const amount = parseFloat(topUpAmount);
+    const amount = parseFloat(topUpAmount.replace(/,/g, ''));
     await supabase.from('pharmacies').update({ wallet_balance: Number(pharmacy.wallet_balance) + amount }).eq('id', pharmacy.id);
     await supabase.from('transactions').insert({
       pharmacy_id: pharmacy.id,
@@ -57,6 +72,31 @@ const PharmacyWallet = () => {
     setTopUpLoading(false);
     toast.success(`₦${amount.toLocaleString()} added to wallet`);
   };
+
+  // you can call this function anything
+  const onClose = () => {
+    // implementation for  whatever you want to do when the Paystack dialog closed.
+    console.log('closed')
+  }
+
+  const handleTopUp = async () => {
+    initializePayment({
+      onClose,
+      onSuccess
+    });
+  };
+
+  const handlePaymentInit = async () => {
+    const resp = await axios.post('/api/payment/init', {
+      amount: topUpAmount,
+
+    }, {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SQUADCO_SECRET_KEY}`,
+      },
+    });
+
+  }
 
   const toggleDirectDebit = async () => {
     if (!pharmacy) return;
@@ -83,7 +123,13 @@ const PharmacyWallet = () => {
         <Card>
           <CardHeader className="pb-2"><CardTitle className="text-sm text-muted-foreground">Top Up Wallet</CardTitle></CardHeader>
           <CardContent className="space-y-3">
-            <Input type="number" placeholder="Amount (₦)" value={topUpAmount} onChange={e => setTopUpAmount(e.target.value)} />
+            <CurrencyInput
+              value={topUpAmount}
+              onValueChange={(value) => setTopUpAmount(value || '')}
+              placeholder="Amount (₦)"
+              prefix="₦"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            />
             <Button onClick={handleTopUp} disabled={topUpLoading || !topUpAmount} className="w-full" size="sm">
               {topUpLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Top Up
