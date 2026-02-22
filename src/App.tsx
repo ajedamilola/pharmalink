@@ -51,8 +51,8 @@ const AppRoutes = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-muted/30">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className='flex min-h-screen items-center justify-center bg-muted/30'>
+        <Loader2 className='h-8 w-8 animate-spin text-primary' />
       </div>
     );
   }
@@ -60,64 +60,87 @@ const AppRoutes = () => {
   if (!session || !appUser) {
     return (
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path='/' element={<LandingPage />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
     );
   }
-  
+
   // Admin requires OTP
-  if (appUser.role === 'admin' && !otpVerified) {
+  if (appUser.role === "admin" && !otpVerified) {
     return <OTPVerification />;
   }
 
-  const homeRoute = appUser.role === 'pharmacy' ? '/pharmacy' : appUser.role === 'vendor' ? '/vendor' : '/admin';
+  const homeRoute =
+    appUser.role === "pharmacy"
+      ? "/pharmacy"
+      : appUser.role === "vendor"
+        ? "/vendor"
+        : "/admin";
 
   // Determine if current path belongs to the wrong portal
-  const rolePrefix = `/${appUser.role === 'pharmacy' ? 'pharmacy' : appUser.role === 'vendor' ? 'vendor' : 'admin'}`;
+  const rolePrefix = `/${appUser.role === "pharmacy" ? "pharmacy" : appUser.role === "vendor" ? "vendor" : "admin"}`;
 
   return (
     <DashboardLayout>
       <Routes>
-        <Route path="/" element={<Navigate to={homeRoute} replace />} />
+        <Route path='/' element={<Navigate to={homeRoute} replace />} />
 
         {/* Redirect wrong portal routes to home */}
-        {appUser.role !== 'pharmacy' && <Route path="/pharmacy/*" element={<Navigate to={homeRoute} replace />} />}
-        {appUser.role !== 'vendor' && <Route path="/vendor/*" element={<Navigate to={homeRoute} replace />} />}
-        {appUser.role !== 'admin' && <Route path="/admin/*" element={<Navigate to={homeRoute} replace />} />}
+        {appUser.role !== "pharmacy" && (
+          <Route
+            path='/pharmacy/*'
+            element={<Navigate to={homeRoute} replace />}
+          />
+        )}
+        {appUser.role !== "vendor" && (
+          <Route
+            path='/vendor/*'
+            element={<Navigate to={homeRoute} replace />}
+          />
+        )}
+        {appUser.role !== "admin" && (
+          <Route
+            path='/admin/*'
+            element={<Navigate to={homeRoute} replace />}
+          />
+        )}
 
         {/* Pharmacy routes */}
-        <Route path="/pharmacy" element={<PharmacyDashboard />} />
-        <Route path="/pharmacy/inventory" element={<PharmacyInventory />} />
-        <Route path="/pharmacy/inventory/:itemId" element={<PharmacyProductDetail />} />
-        <Route path="/pharmacy/marketplace" element={<PharmacyMarketplace />} />
-        <Route path="/pharmacy/expiry" element={<PharmacyExpiry />} />
-        <Route path="/pharmacy/wallet" element={<PharmacyWallet />} />
-        <Route path="/pharmacy/pos" element={<PharmacyPOS />} />
-        <Route path="/pharmacy/orders" element={<PharmacyOrders />} />
-        <Route path="/pharmacy/notifications" element={<Notifications />} />
-        <Route path="/pharmacy/documents" element={<PharmacyDocuments />} />
+        <Route path='/pharmacy' element={<PharmacyDashboard />} />
+        <Route path='/pharmacy/inventory' element={<PharmacyInventory />} />
+        <Route
+          path='/pharmacy/inventory/:itemId'
+          element={<PharmacyProductDetail />}
+        />
+        <Route path='/pharmacy/marketplace' element={<PharmacyMarketplace />} />
+        <Route path='/pharmacy/expiry' element={<PharmacyExpiry />} />
+        <Route path='/pharmacy/wallet' element={<PharmacyWallet />} />
+        <Route path='/pharmacy/pos' element={<PharmacyPOS />} />
+        <Route path='/pharmacy/orders' element={<PharmacyOrders />} />
+        <Route path='/pharmacy/notifications' element={<Notifications />} />
+        <Route path='/pharmacy/documents' element={<PharmacyDocuments />} />
 
         {/* Vendor routes */}
-        <Route path="/vendor" element={<VendorDashboard />} />
-        <Route path="/vendor/products" element={<VendorProducts />} />
-        <Route path="/vendor/orders" element={<VendorOrders />} />
-        <Route path="/vendor/verification" element={<VendorVerification />} />
-        <Route path="/vendor/notifications" element={<Notifications />} />
+        <Route path='/vendor' element={<VendorDashboard />} />
+        <Route path='/vendor/products' element={<VendorProducts />} />
+        <Route path='/vendor/orders' element={<VendorOrders />} />
+        <Route path='/vendor/verification' element={<VendorVerification />} />
+        <Route path='/vendor/notifications' element={<Notifications />} />
 
         {/* Admin routes */}
-        <Route path="/admin" element={<AdminOverview />} />
-        <Route path="/admin/pharmacies" element={<AdminPharmacies />} />
-        <Route path="/admin/vendors" element={<AdminVendors />} />
-        <Route path="/admin/orders" element={<AdminOrders />} />
-        <Route path="/admin/buyback" element={<AdminBuyback />} />
-        <Route path="/admin/disputes" element={<AdminDisputes />} />
-        <Route path="/admin/audit" element={<AdminAudit />} />
-        <Route path="/admin/settings" element={<AdminSettings />} />
+        <Route path='/admin' element={<AdminOverview />} />
+        <Route path='/admin/pharmacies' element={<AdminPharmacies />} />
+        <Route path='/admin/vendors' element={<AdminVendors />} />
+        <Route path='/admin/orders' element={<AdminOrders />} />
+        <Route path='/admin/buyback' element={<AdminBuyback />} />
+        <Route path='/admin/disputes' element={<AdminDisputes />} />
+        <Route path='/admin/audit' element={<AdminAudit />} />
+        <Route path='/admin/settings' element={<AdminSettings />} />
 
-        <Route path="*" element={<NotFound />} />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </DashboardLayout>
   );
