@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,7 +14,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import { ChevronLeft, ChevronRight, Plus, Loader2, Eye } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { ChevronLeft, ChevronRight, Plus, Loader2, Eye, Check, ChevronDown } from 'lucide-react';
+import { DrugCombobox } from '@/components/ui/drug-combobox';
 
 const PAGE_SIZE = 10;
 
@@ -30,6 +34,7 @@ const PharmacyInventory = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [addOpen, setAddOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [selectedDrug, setSelectedDrug] = useState<any>(null);
   const [form, setForm] = useState({
     drug_id: '', batch_number: '', expiry_date: '', stock_level: '0', reorder_threshold: '10',
   });
@@ -59,6 +64,12 @@ const PharmacyInventory = () => {
   }, [appUser, page]);
 
   useEffect(() => { fetchInventory(); }, [fetchInventory]);
+
+  useEffect(() => {
+    if (!addOpen) {
+      setSelectedDrug(null);
+    }
+  }, [addOpen]);
 
   useEffect(() => {
     if (!pharmacy) return;
@@ -92,8 +103,35 @@ const PharmacyInventory = () => {
     toast.success('Inventory item added manually');
     setAddOpen(false);
     setForm({ drug_id: '', batch_number: '', expiry_date: '', stock_level: '0', reorder_threshold: '10' });
+    setSelectedDrug(null);
     setSaving(false);
     fetchInventory();
+  };
+
+  const createNewDrug = async (name: string) => {
+    // Check if drug with this name already exists
+    const { data: existing } = await supabase.from('drugs').select('id').eq('name', name).maybeSingle();
+    if (existing) {
+      toast.error('A drug with this name already exists');
+      return null;
+    }
+
+    const { data, error } = await supabase.from('drugs').insert({
+      name,
+      category: 'General', // Default category
+      unit_price: 1000, // Default unit price
+      description: 'Manually added drug',
+      shelf_life_months: 24,
+    }).select().single();
+    if (error) {
+      toast.error('Failed to create new drug');
+      return null;
+    }
+    // Refresh drugs list
+    const { data: refreshedDrugs } = await supabase.from('drugs').select('*');
+    setDrugs(refreshedDrugs || []);
+    toast.success('New drug created');
+    return data;
   };
 
   const getRemainingShelfPct = (item: any) => {
@@ -156,10 +194,16 @@ const PharmacyInventory = () => {
             <div className="space-y-4 mt-2">
               <div className="space-y-2">
                 <Label>Drug</Label>
-                <Select value={form.drug_id} onValueChange={v => setForm({ ...form, drug_id: v })}>
-                  <SelectTrigger><SelectValue placeholder="Select drug" /></SelectTrigger>
-                  <SelectContent>{drugs.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}</SelectContent>
-                </Select>
+                <DrugCombobox
+                  drugs={drugs}
+                  value={selectedDrug}
+                  onSelect={(drug) => {
+                    setSelectedDrug(drug);
+                    setForm({ ...form, drug_id: drug?.id || '' });
+                  }}
+                  allowCreate={true}
+                  onCreate={createNewDrug}
+                />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2"><Label>Batch Number</Label><Input value={form.batch_number} onChange={e => setForm({ ...form, batch_number: e.target.value })} placeholder="BATCH-001" /></div>

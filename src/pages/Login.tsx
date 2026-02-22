@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const { signIn } = useAuth();
+  const { signIn, appUser } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +23,21 @@ const Login = () => {
     const { error } = await signIn(email, password);
     if (error) {
       toast.error(error.message || 'Login failed');
+      setLoading(false);
+      return;
     }
+    // Redirect based on role once appUser is populated
+    const redirect = () => {
+      const role = appUser?.role;
+      if (role === 'pharmacy') navigate('/pharmacy', { replace: true });
+      else if (role === 'vendor') navigate('/vendor', { replace: true });
+      else if (role === 'admin') navigate('/admin', { replace: true });
+      else navigate('/', { replace: true });
+    };
+
+    // appUser may not be immediately available right after signIn
+    // so we wait a short time and then redirect
+    setTimeout(redirect, 300);
     setLoading(false);
   };
 

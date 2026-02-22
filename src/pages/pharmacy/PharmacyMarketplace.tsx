@@ -26,6 +26,30 @@ const PharmacyMarketplace = () => {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [checkingOut, setCheckingOut] = useState(false);
 
+  // Restore cart from localStorage on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('pharmacy_marketplace_cart');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          setCart(parsed);
+        }
+      }
+    } catch (_err) {
+      // ignore parse errors
+    }
+  }, []);
+
+  // Persist cart whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('pharmacy_marketplace_cart', JSON.stringify(cart));
+    } catch (_err) {
+      // ignore storage errors
+    }
+  }, [cart]);
+
   useEffect(() => {
     const fetch = async () => {
       let query = supabase
@@ -61,6 +85,14 @@ const PharmacyMarketplace = () => {
 
   const removeFromCart = (listingId: string) => {
     setCart(cart.filter(c => c.listing.id !== listingId));
+  };
+
+  const updateCartQuantity = (listingId: string, quantity: number) => {
+    if (quantity <= 0) {
+      setCart(prev => prev.filter(c => c.listing.id !== listingId));
+      return;
+    }
+    setCart(prev => prev.map(c => c.listing.id === listingId ? { ...c, quantity } : c));
   };
 
   const cartSubtotal = cart.reduce((sum, c) => sum + c.listing.unit_price * c.quantity, 0);
@@ -167,13 +199,20 @@ const PharmacyMarketplace = () => {
           <DialogHeader><DialogTitle>Shopping Cart</DialogTitle></DialogHeader>
           <div className="space-y-4">
             {cart.map(item => (
-              <div key={item.listing.id} className="flex items-center justify-between rounded-lg border p-3">
+              <div key={item.listing.id} className="flex items-center justify-between rounded-lg border p-3 gap-3">
                 <div>
                   <p className="font-medium text-sm">{item.listing.drugs?.name}</p>
-                  <p className="text-xs text-muted-foreground">{item.quantity} × ₦{Number(item.listing.unit_price).toLocaleString()}</p>
+                  <p className="text-xs text-muted-foreground">₦{Number(item.listing.unit_price).toLocaleString()} each</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-medium">₦{(item.listing.unit_price * item.quantity).toLocaleString()}</span>
+                  <input
+                    type="number"
+                    min={1}
+                    className="w-16 rounded-md border px-2 py-1 text-sm"
+                    value={item.quantity}
+                    onChange={e => updateCartQuantity(item.listing.id, Number(e.target.value) || 1)}
+                  />
+                  <span className="font-medium whitespace-nowrap">₦{(item.listing.unit_price * item.quantity).toLocaleString()}</span>
                   <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.listing.id)}><Trash2 className="h-4 w-4" /></Button>
                 </div>
               </div>

@@ -22,6 +22,7 @@ const PharmacyOrders = () => {
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [orderTypeFilter, setOrderTypeFilter] = useState('all');
 
   const fetchOrders = useCallback(async () => {
     if (!appUser) return;
@@ -30,27 +31,88 @@ const PharmacyOrders = () => {
     if (!ph) { setLoading(false); return; }
     setPharmacy(ph);
 
-    let query = supabase
-      .from('orders')
-      .select('*, drugs(name), vendors(name)', { count: 'exact' })
-      .eq('pharmacy_id', ph.id)
-      .order('created_at', { ascending: false });
+    const allOrders: any[] = [];
 
-    if (statusFilter !== 'all') {
-      query = query.eq('status', statusFilter as any);
+    if (orderTypeFilter === 'all' || orderTypeFilter === 'standard') {
+      let query = supabase
+        .from('orders')
+        .select('*, drugs(name), vendors(name)', { count: 'exact' })
+        .eq('pharmacy_id', ph.id)
+        .order('created_at', { ascending: false });
+
+      if (statusFilter !== 'all') {
+        query = query.eq('status', statusFilter as any);
+      }
+
+      const { data: stdOrders, count: stdCount } = await query.range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+      allOrders.push(...(stdOrders || []).map(o => ({ ...o, type: 'Standard', status: o.status })));
     }
 
-    const { data, count } = await query.range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
-    setOrders(data || []);
-    setTotal(count || 0);
+    if (orderTypeFilter === 'all' || orderTypeFilter === 'automated') {
+      const poQuery = supabase
+        .from('purchase_orders')
+        .select('*, drugs(name), vendors(name)')
+        .eq('pharmacy_id', ph.id)
+        .eq('trigger', 'auto')
+        .order('created_at', { ascending: false });
+
+      const { data: poOrders } = await poQuery.range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+      allOrders.push(...(poOrders || []).map(o => ({ ...o, type: 'Automatic', status: o.approval_status })));
+    }
+
+    setOrders(allOrders.slice(0, PAGE_SIZE));
+    setTotal(allOrders.length); // Approximate, since we need to handle pagination properly
     setLoading(false);
-  }, [appUser, page, statusFilter]);
+  }, [appUser, page, statusFilter, orderTypeFilter]);
 
   useEffect(() => { fetchOrders(); }, [fetchOrders]);
 
   const confirmDelivery = async (orderId: string) => {
+    if (!pharmacy) return;
+
+    const { data: order, error } = await supabase
+      .from('orders')
+      .select('*, drugs(*), vendors(id)')
+      .eq('id', orderId)
+      .maybeSingle();
+
+    if (error || !order) {
+      toast.error('Unable to load order details');
+      return;
+    }
+
     await supabase.from('orders').update({ status: 'delivered' as any }).eq('id', orderId);
-    toast.success('Delivery confirmed');
+
+    const batchNumber = `BATCH-${new Date(order.created_at).getTime()}`;
+    const expiryDate = new Date();
+    expiryDate.setMonth(expiryDate.getMonth() + (order.drugs?.shelf_life_months || 12));
+
+    console.log({
+      pharmacy_id: pharmacy.id,
+      drug_id: order.drug_id,
+      batch_number: batchNumber,
+      expiry_date: expiryDate.toISOString().slice(0, 10),
+      stock_level: order.quantity,
+      reorder_threshold: 10,
+      vendor_id: order.vendor_id || order.vendors?.id || null,
+      is_manual: false,
+      auto_restock: true,
+    })
+
+
+    await supabase.from('pharmacy_inventory').insert({
+      pharmacy_id: pharmacy.id,
+      drug_id: order.drug_id,
+      batch_number: batchNumber,
+      expiry_date: expiryDate.toISOString().slice(0, 10),
+      stock_level: order.quantity,
+      reorder_threshold: 10,
+      vendor_id: order.vendor_id || order.vendors?.id || null,
+      is_manual: false,
+      auto_restock: true,
+    });
+
+    toast.success('Delivery confirmed and inventory updated');
     fetchOrders();
   };
 
@@ -59,6 +121,15 @@ const PharmacyOrders = () => {
   return (
     <div className="space-y-4">
       <div className="flex gap-3">
+        <Button onClick={() => { setOrderTypeFilter('automated'); setPage(0); }}>View Automatic Restock Orders</Button>
+        <Select value={orderTypeFilter} onValueChange={v => { setOrderTypeFilter(v); setPage(0); }}>
+          <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Orders</SelectItem>
+            <SelectItem value="standard">Standard Orders</SelectItem>
+            <SelectItem value="automated">Automated Orders</SelectItem>
+          </SelectContent>
+        </Select>
         <Select value={statusFilter} onValueChange={v => { setStatusFilter(v); setPage(0); }}>
           <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -79,6 +150,7 @@ const PharmacyOrders = () => {
                 <TableHead>Subtotal</TableHead>
                 <TableHead>Logistics Fee</TableHead>
                 <TableHead>Total</TableHead>
+                <TableHead>Type</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Logistics</TableHead>
                 <TableHead>Date</TableHead>
@@ -87,7 +159,7 @@ const PharmacyOrders = () => {
             </TableHeader>
             <TableBody>
               {orders.length === 0 ? (
-                <TableRow><TableCell colSpan={10} className="text-center py-8 text-muted-foreground">No orders found</TableCell></TableRow>
+                <TableRow><TableCell colSpan={11} className="text-center py-8 text-muted-foreground">No orders found</TableCell></TableRow>
               ) : orders.map(o => (
                 <TableRow key={o.id}>
                   <TableCell className="font-medium">{o.drugs?.name}</TableCell>
@@ -96,11 +168,12 @@ const PharmacyOrders = () => {
                   <TableCell>₦{Number(o.total_price).toLocaleString()}</TableCell>
                   <TableCell>₦{Number(o.logistics_fee || 0).toLocaleString()}</TableCell>
                   <TableCell className="font-medium">₦{(Number(o.total_price) + Number(o.logistics_fee || 0)).toLocaleString()}</TableCell>
+                  <TableCell><Badge variant={o.type === 'Automatic' ? 'secondary' : 'default'}>{o.type}</Badge></TableCell>
                   <TableCell><Badge variant="secondary" className="capitalize">{o.status?.replace(/_/g, ' ')}</Badge></TableCell>
                   <TableCell className="text-xs">{o.logistics_partner || '—'}</TableCell>
                   <TableCell className="text-xs">{new Date(o.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>
-                    {o.status === 'out_for_delivery' && (
+                    {o.type === 'Standard' && o.status === 'out_for_delivery' && (
                       <Button size="sm" onClick={() => confirmDelivery(o.id)}>Confirm Delivery</Button>
                     )}
                   </TableCell>

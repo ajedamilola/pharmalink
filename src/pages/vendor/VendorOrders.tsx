@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,6 +20,8 @@ const statusColors: Record<string, 'default' | 'secondary' | 'destructive'> = {
   in_transit: 'default',
   out_for_delivery: 'default',
   delivered: 'default',
+  approved: 'default',
+  fulfilled: 'default',
 };
 
 const VendorOrders = () => {
@@ -28,22 +31,40 @@ const VendorOrders = () => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [newStatus, setNewStatus] = useState('');
   const [updating, setUpdating] = useState(false);
+  const [orderTypeFilter, setOrderTypeFilter] = useState('all');
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     if (!appUser) return;
     const { data: v } = await supabase.from('vendors').select('id').eq('user_id', appUser.id).maybeSingle();
     if (!v) { setLoading(false); return; }
 
-    const { data } = await supabase
-      .from('orders')
-      .select('*, drugs(*), pharmacies(name, location)')
-      .eq('vendor_id', v.id)
-      .order('created_at', { ascending: false });
-    setOrders(data || []);
-    setLoading(false);
-  };
+    // eslint-disable-next-line prefer-const
+    let allOrders = [];
 
-  useEffect(() => { fetchOrders(); }, [appUser]);
+    if (orderTypeFilter === 'all' || orderTypeFilter === 'standard') {
+      const { data } = await supabase
+        .from('orders')
+        .select('*, drugs(*), pharmacies(name, location)')
+        .eq('vendor_id', v.id)
+        .order('created_at', { ascending: false });
+      allOrders.push(...(data || []).map(o => ({ ...o, type: 'Standard' })));
+    }
+
+    if (orderTypeFilter === 'all' || orderTypeFilter === 'automated') {
+      const { data } = await supabase
+        .from('purchase_orders')
+        .select('*, drugs(*), pharmacies(name)')
+        .eq('vendor_id', v.id)
+        .eq('trigger', 'auto')
+        .order('created_at', { ascending: false });
+      allOrders.push(...(data || []).map(o => ({ ...o, type: 'Automatic', status: o.approval_status, pharmacies: { name: o.pharmacies?.name, location: '' } })));
+    }
+
+    setOrders(allOrders);
+    setLoading(false);
+  }, [appUser, orderTypeFilter]);
+
+  useEffect(() => { fetchOrders(); }, [appUser, orderTypeFilter]);
 
   const updateStatus = async () => {
     if (!selectedOrder || !newStatus) return;
@@ -55,10 +76,26 @@ const VendorOrders = () => {
     fetchOrders();
   };
 
+  const approvePO = async (id: string) => {
+    await supabase.from('purchase_orders').update({ approval_status: 'approved' }).eq('id', id);
+    toast.success('Purchase order approved');
+    fetchOrders();
+  };
+
   if (loading) return <div className="space-y-3">{[...Array(3)].map((_, i) => <Skeleton key={i} className="h-16" />)}</div>;
 
   return (
     <div className="space-y-4">
+      <div className="flex gap-3">
+        <Select value={orderTypeFilter} onValueChange={setOrderTypeFilter}>
+          <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Orders</SelectItem>
+            <SelectItem value="standard">Standard Orders</SelectItem>
+            <SelectItem value="automated">Automated Orders</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       <Card>
         <CardContent className="p-0">
           <Table>
@@ -70,13 +107,14 @@ const VendorOrders = () => {
                 <TableHead>Total</TableHead>
                 <TableHead>Destination</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Type</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {orders.length === 0 ? (
-                <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No orders yet</TableCell></TableRow>
+                <TableRow><TableCell colSpan={9} className="text-center py-8 text-muted-foreground">No orders yet</TableCell></TableRow>
               ) : orders.map(o => (
                 <TableRow key={o.id}>
                   <TableCell className="font-medium">{o.drugs?.name}</TableCell>
@@ -85,10 +123,14 @@ const VendorOrders = () => {
                   <TableCell>₦{Number(o.total_price).toLocaleString()}</TableCell>
                   <TableCell className="text-xs">{o.destination_location}</TableCell>
                   <TableCell><Badge variant={statusColors[o.status] || 'secondary'} className="capitalize">{o.status?.replace(/_/g, ' ')}</Badge></TableCell>
+                  <TableCell><Badge variant={o.type === 'Automatic' ? 'secondary' : 'default'}>{o.type}</Badge></TableCell>
                   <TableCell className="text-xs">{new Date(o.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>
-                    {o.status !== 'delivered' && (
+                    {o.type === 'Standard' && o.status !== 'delivered' && (
                       <Button variant="outline" size="sm" onClick={() => { setSelectedOrder(o); setNewStatus(o.status); }}>Update</Button>
+                    )}
+                    {o.type === 'Automatic' && o.approval_status === 'pending' && (
+                      <Button size="sm" onClick={() => approvePO(o.id)}>Approve</Button>
                     )}
                   </TableCell>
                 </TableRow>
