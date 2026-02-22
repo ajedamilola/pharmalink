@@ -20,16 +20,16 @@ export default function About() {
               className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight leading-[1.1]"
             />
             
-            <p className="text-gray-400 text-lg md:text-xl max-w-2xl leading-relaxed">
-              We are dedicated to revolutionizing the way pharmacies manage their drug supply chain. 
+            <p className="text-green-950/70 text-lg md:text-xl max-w-2xl leading-relaxed">
+               Welcome to the future of inventory management. We are pushing the boundaries of supply chain architecture. 
               Our team is committed to providing intuitive, AI-driven solutions that empower pharmacists 
               to easily restock through an automated, streamlined marketplace.
             </p>
           </div>
 
           {/* Right Content - Image & Rating */}
-          <div className="col-span-1 lg:col-span-4 relative">
-             <div className="relative w-full aspect-4/5 md:aspect-square lg:aspect-3/4 rounded-4xl overflow-hidden border border-white/10 group">
+          <div className="col-span-1 lg:col-span-1 relative z-10 w-full max-w-md mx-auto">
+             <div className="relative w-full aspect-4/5 md:aspect-square lg:aspect-3/4 rounded-4xl overflow-hidden border border-green-950/10 group">
                 <img 
                    src="/assets/home/image2.png" 
                    alt="Medical Professional" 
@@ -52,14 +52,15 @@ export default function About() {
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 border-t border-white/10 pt-16">
+        <div className="w-full relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 border-t border-green-950/10 pt-16">
             
             {/* Stat 1 */}
             <div className="flex flex-col gap-2">
                 <span className="text-5xl md:text-6xl font-medium text-green-950">
                     500<span className="text-[#22c55e] text-3xl">ms</span>
                 </span>
-                <p className="text-gray-400 text-sm leading-relaxed max-w-[150px]">
+                <p className="text-green-950/70 text-sm leading-relaxed max-w-[150px]">
                     Sub-millisecond latency for real-time inventory synchronisation.
                 </p>
             </div>
@@ -69,7 +70,7 @@ export default function About() {
                 <span className="text-5xl md:text-6xl font-medium text-green-950">
                     5<span className="text-[#22c55e] text-3xl">+</span>
                 </span>
-                <p className="text-gray-400 text-sm leading-relaxed max-w-[150px]">
+                <p className="text-green-950/70 text-sm leading-relaxed max-w-[150px]">
                     Major verified vendors onboarded for fast delivery.
                 </p>
             </div>
@@ -79,7 +80,7 @@ export default function About() {
                 <span className="text-5xl md:text-6xl font-medium text-green-950">
                     100<span className="text-[#22c55e] text-3xl">%</span>
                 </span>
-                <p className="text-gray-400 text-sm leading-relaxed max-w-[150px]">
+                <p className="text-green-950/70 text-sm leading-relaxed max-w-[150px]">
                     Compliance with NAFDAC regulatory standards.
                 </p>
             </div>
@@ -89,11 +90,12 @@ export default function About() {
                 <span className="text-5xl md:text-6xl font-medium text-green-950">
                     0<span className="text-[#22c55e] text-3xl">PII</span>
                 </span>
-                <p className="text-gray-400 text-sm leading-relaxed max-w-[150px]">
+                <p className="text-green-950/70 text-sm leading-relaxed max-w-[150px]">
                     Automated buy-back processing for expiring drugs.
                 </p>
             </div>
 
+        </div>
         </div>
 
       </div>
