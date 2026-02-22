@@ -17,7 +17,7 @@ import Footer from './Footer'
 export default function FullPage() {
   return (
     <ReactLenis root>
-        <div className="min-h-screen bg-[#050505] text-white font-[arimo] overflow-x-hidden">
+        <div className="min-h-screen bg-white text-green-950 font-[arimo] overflow-x-hidden">
             <div className="p-4 md:p-8">
                 {/* Navigation */}
                 <Navbar />

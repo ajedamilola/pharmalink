@@ -6,7 +6,7 @@ import TextHighlight from './animation/TextHighlight';
 
 export default function About() {
   return (
-    <section id="about" className="bg-[#050505] text-white py-20 px-4 md:px-12 font-[arimo]">
+    <section id="about" className="bg-white text-green-950 py-20 px-4 md:px-12 font-[arimo]">
       <div className="max-w-[1400px] mx-auto flex flex-col gap-20">
         
         {/* Top Section */}
@@ -37,14 +37,14 @@ export default function About() {
                 />
                 
                 {/* Floating Rating Badge */}
-                <div className="absolute top-6 right-6 bg-black/40 border border-white/10 rounded-full px-4 py-2 flex items-center gap-3 backdrop-blur-md">
+                <div className="absolute top-6 right-6 bg-white/40 border border-green-950/10 rounded-full px-4 py-2 flex items-center gap-3 backdrop-blur-md">
                      <div className="flex gap-1 text-[#22c55e]">
                         {[1, 2, 3, 4, 5].map((star) => (
                             <Star key={star} size={14} fill="#22c55e" />
                         ))}
                     </div>
-                    <span className="text-xs font-medium text-white/90">
-                        4.9/5
+                    <span className="text-xs font-medium text-green-950/90">
+                        Top Rated System
                     </span>
                 </div>
              </div>
@@ -56,7 +56,7 @@ export default function About() {
             
             {/* Stat 1 */}
             <div className="flex flex-col gap-2">
-                <span className="text-5xl md:text-6xl font-medium text-white">
+                <span className="text-5xl md:text-6xl font-medium text-green-950">
                     500<span className="text-[#22c55e] text-3xl">ms</span>
                 </span>
                 <p className="text-gray-400 text-sm leading-relaxed max-w-[150px]">
@@ -66,7 +66,7 @@ export default function About() {
 
             {/* Stat 2 */}
             <div className="flex flex-col gap-2">
-                <span className="text-5xl md:text-6xl font-medium text-white">
+                <span className="text-5xl md:text-6xl font-medium text-green-950">
                     5<span className="text-[#22c55e] text-3xl">+</span>
                 </span>
                 <p className="text-gray-400 text-sm leading-relaxed max-w-[150px]">
@@ -76,7 +76,7 @@ export default function About() {
 
             {/* Stat 3 */}
             <div className="flex flex-col gap-2">
-                <span className="text-5xl md:text-6xl font-medium text-white">
+                <span className="text-5xl md:text-6xl font-medium text-green-950">
                     100<span className="text-[#22c55e] text-3xl">%</span>
                 </span>
                 <p className="text-gray-400 text-sm leading-relaxed max-w-[150px]">
@@ -86,7 +86,7 @@ export default function About() {
 
              {/* Stat 4 */}
              <div className="flex flex-col gap-2">
-                <span className="text-5xl md:text-6xl font-medium text-white">
+                <span className="text-5xl md:text-6xl font-medium text-green-950">
                     0<span className="text-[#22c55e] text-3xl">PII</span>
                 </span>
                 <p className="text-gray-400 text-sm leading-relaxed max-w-[150px]">
