@@ -74,7 +74,7 @@ export default function Faq() {
                   <h3 className={`text-lg md:text-4xl pr-8 select-none ${openIndex === index ? 'text-[#22c55e]' : 'text-green-950/90 group-hover:text-[#22c55e]'}`}>
                     {faq.question}
                   </h3>
-                  <div className={`shrink-0 w-10 h-10 rounded-full border border-green-950/10 flex items-center justify-center ${openIndex === index ? 'bg-[#22c55e] text-black border-[#22c55e]' : 'text-gray-500 group-hover:border-[#22c55e] group-hover:text-[#22c55e]'}`}>
+                  <div className={`shrink-0 w-10 h-10 rounded-full border border-green-950/10 flex items-center justify-center ${openIndex === index ? 'bg-[#22c55e] text-green-950 border-[#22c55e]' : 'text-gray-500 group-hover:border-[#22c55e] group-hover:text-[#22c55e]'}`}>
                     {openIndex === index ? (
                       <Minus size={20} />
                     ) : (

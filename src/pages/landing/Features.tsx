@@ -52,13 +52,9 @@ export default function Features() {
                 />
                 <div 
                   ref={el => { visualRefs.current[0] = el; }}
-                  className="relative w-32 h-16 md:w-56 md:h-24 lg:w-72 lg:h-32 rounded-full overflow-hidden bg-white/5 flex items-center justify-center border border-white/10"
+                  className="relative w-32 h-16 md:w-56 md:h-24 lg:w-72 lg:h-32 rounded-full overflow-hidden bg-green-950/5 flex items-center justify-center border border-green-950/10"
                 >
-                     <img 
-                        src="/assets/home/image1.jpg" 
-                        alt="Medical Future" 
-                        className="w-full h-full object-cover opacity-80 scale-125 grayscale-[0.3]"
-                     />
+                     <img src="/homeImage1.png" alt="PharmaLink Vendor" className="w-full h-full object-cover opacity-80" />
                 </div>
                 <TextHighlight 
                     as="span"

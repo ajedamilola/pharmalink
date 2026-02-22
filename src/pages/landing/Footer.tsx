@@ -24,7 +24,7 @@ export default function Footer() {
             </div>
 
             {/* Right Card - Lime */}
-            <Link to="/login" className="bg-[#22c55e] rounded-[2rem] p-8 w-full md:w-72 h-64 md:h-72 flex flex-col justify-between text-black relative group overflow-hidden cursor-pointer transition-transform hover:-translate-y-2">
+            <Link to="/login" className="bg-[#22c55e] rounded-[2rem] p-8 w-full md:w-72 h-64 md:h-72 flex flex-col justify-between text-green-950 relative group overflow-hidden cursor-pointer transition-transform hover:-translate-y-2">
                  <h3 className="text-2xl font-medium">Get Started</h3>
                  
                  <div className="bg-green-950 text-white rounded-full px-6 py-3 flex items-center justify-between group-hover:bg-green-900 transition-colors">
@@ -64,7 +64,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar - Purple Strip */}
-      <div className="bg-[#22c55e] text-black w-full py-6 px-4 md:px-8">
+      <div className="bg-[#22c55e] text-green-950 w-full py-6 px-4 md:px-8">
           <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold uppercase tracking-wider">
               <span>Copyright © PharmaLink 2026</span>
               

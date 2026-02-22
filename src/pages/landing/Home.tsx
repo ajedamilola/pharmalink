@@ -11,7 +11,7 @@ export default function Home() {
       <div className="text-center space-y-2 relative z-10">
         <h1 className="text-5xl md:text-8xl lg:text-9xl tracking-tight text-green-950/90">
           PharmaLink:{" "}
-          <span className="text-black bg-[#22c55e] px-4 rounded-3xl">
+          <span className="text-green-950 bg-[#22c55e] px-4 rounded-3xl">
             Inventory
           </span>
         </h1>
@@ -50,7 +50,7 @@ export default function Home() {
                 </p>
                 <div className="flex gap-3 mt-2">
                   {/* Voice Icon */}
-                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-black">
+                  <div className="w-8 h-8 bg-green-950/10 rounded-full flex items-center justify-center text-green-950">
                     <Mic size={16} />
                   </div>
                   {/* Activity Icon */}
@@ -63,7 +63,7 @@ export default function Home() {
               {/* Circular Call Button */}
               <Link
                 to="#solutions"
-                className="w-24 h-24 rounded-full bg-[#22c55e] text-black font-medium text-lg flex flex-col items-center justify-center leading-tight hover:scale-105 transition-transform text-center group"
+                className="w-24 h-24 rounded-full bg-[#22c55e] text-green-950 font-medium text-lg flex flex-col items-center justify-center leading-tight hover:scale-105 transition-transform text-center group"
               >
                 Start{" "}
                 <span className="text-xs font-bold group-hover:underline">
@@ -129,7 +129,7 @@ export default function Home() {
               <button className="px-8 py-3 rounded-full border border-green-950/20 text-green-950 font-medium hover:bg-gray-100 transition-colors">
                 Read Docs
               </button>
-              <button className="px-8 py-3 rounded-full bg-[#22c55e] text-black font-medium hover:bg-[#16a34a] transition-colors">
+              <button className="px-8 py-3 rounded-full bg-[#22c55e] text-green-950 font-medium hover:bg-[#16a34a] transition-colors">
                 View Demo
               </button>
             </div>
