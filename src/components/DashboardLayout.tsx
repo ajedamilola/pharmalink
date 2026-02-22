@@ -183,7 +183,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       ? `${appUser?.name ?? "Pharmacy"} Pharmacy Portal`
       : appUser?.role === "vendor"
         ? `${appUser?.name ?? "Vendor"} Vendor Portal`
-        : `${appUser?.name ?? "Admin"} Admin Portal`;
+        : `${appUser?.name ?? "Admin"}`;
 
   return (
     <div className='flex h-screen overflow-hidden bg-muted/30'>

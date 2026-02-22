@@ -86,7 +86,8 @@ const Register = () => {
       }
 
       toast.success("Registration successful! You can now sign in.");
-      navigate("/login");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      navigate(`/${form.role}`);
     } catch (err: any) {
       toast.error(err.message || "Registration failed");
     }
