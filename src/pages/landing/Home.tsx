@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
-    <main className='flex flex-col gap-12 pt-[9.5rem] md:mt-36'>
+    <main className='flex flex-col gap-12 pt-[9.5rem] md:mt-16'>
       {/* Centered Heading */}
       <div className='text-center space-y-2 relative z-10'>
         <h1 className='text-5xl md:text-8xl lg:text-9xl tracking-tight text-green-950/90'>
