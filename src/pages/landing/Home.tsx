@@ -45,8 +45,8 @@ export default function Home() {
           {/* App & Utilities Group */}
           <div className='flex flex-col gap-8'>
             {/* Get App Row */}
-            <div className='flex items-center gap-8'>
-              <div className='flex flex-col gap-4 bg-green-950/5 border border-green-950/10 rounded-3xl p-6 backdrop-blur-sm w-full'>
+            <div className='flex items-center gap-8 justify-evenly lg:justify-normal'>
+              <div className='flex flex-col gap-4 bg-green-950/5 border border-green-950/10 rounded-3xl p-6 backdrop-blur-sm '>
                 <span className='btext-lg font-medium text-green-950'>
                   Smart Procurement
                 </span>
@@ -66,15 +66,13 @@ export default function Home() {
               </div>
 
               {/* Circular Call Button */}
-              {/* <Link
-                to='#solutions'
+              <Link
+                to='/login'
                 className='w-24 h-24 rounded-full bg-[#22c55e] text-green-950 font-medium text-lg flex flex-col items-center justify-center leading-tight hover:scale-105 transition-transform text-center group'
               >
-                Start{" "}
-                <span className='text-xs font-bold group-hover:underline'>
-                  DEMO
-                </span>
-              </Link> */}
+                Get{" "}
+                <span className='font-bold group-hover:underline'>Started</span>
+              </Link>
             </div>
 
             {/* Left Bottom Image */}
